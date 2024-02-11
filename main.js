@@ -42,7 +42,7 @@ function play(){
     // console.log("정답")
   }
 }
-play()
+// play()
 
 
 
