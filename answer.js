@@ -11,101 +11,86 @@
  */
 
 
+//(4트)
+let randomNumber = 0;
 
-// 0.랜덤번호 지정 
-// 1.유저가 번호를 입력
-
-// 2버튼 누름 
-// 2-1.버튼에 클릭이벤트 만들어주기 
-// 2-2.함수를 매개변수로 넘겨주기 
-
-
-// 3.유저가 입력한 번호 < 랜덤번호 
-// 4."UP!!"
-// 5.유저가 입력한 번호 > 랜덤번호
-// 6."DOWN!!"
-
-// 7리셋버튼 만들어주기 (버튼이벤트/누르면 리셋되는함수- 입력했던 숫자가 사라져야하고, 다시 정답이 생겨야함) 
-
-// 6play함수 실행시 5번의 chance가 하나씩 깎이게됨 
-// 7. chances가 1보다 작아지면 버튼이 비 활성화 됨 
-// 8.history 만들어 주기 (같은 숫자를 입력했던 내역 있는지 확인 => 있으면 이미 입력한 값입니다  =>기회가 깎이면 안됨 )
-
-
-let randomNumber = 0 ;
+let resultArea = document.getElementById("result-area");
 let userNumber = document.getElementById("number-area");
 let buttonGo = document.getElementById("btn-go");
-let resultArea = document.getElementById("result-area");
 
 let buttonReset = document.getElementById("btn-reset");
-let chanceArea = document.getElementById("chance-area");
-
-
-let chances = 5; //기존 찬스는 5번 
+let chances = 5 ; //클릭할 때 마다 기회가 줄어야함 
 let gameOver = false;
+let chanceArea = document.getElementById("chance-area");
 
 let history = [];
 
-buttonGo.addEventListener("click",play)
-buttonReset.addEventListener("click",reset)
-userNumber.addEventListener("focus",function(){
-  userNumber.value="";})
 
+buttonGo.addEventListener("click", play);;
+buttonReset.addEventListener("click",reset);
+userNumber.addEventListener("focus",function(){
+  userNumber.value="";//잠깐 쓰고 끝날 함수일때는 선언을 안해도됨 . 선언하면 메모리 찬다 
+});
 
 function randomGame (){
   randomNumber = Math.floor(Math.random()*100)+1;
-  console.log("정답은",randomNumber)
+  console.log("정답은",randomNumber);
 }
-randomGame ()
+
+randomGame ();
 
 function play(){
-  userValue = userNumber.value;
+  let userValue = userNumber.value;
 
-  if(userValue < 1 || userValue >100){
-    resultArea.textContent = "1-100사이의 숫자를 입력해주세요"
+
+  if(userValue<1 || userValue>100){
+    resultArea.textContent = "1과 100 사이의 숫자로 입력해주세요";
     return;
   }
- if(history.includes(userValue)){
-  resultArea.textContent = "이미 입력한 숫자입니다";
-  return;
-}
 
+  if(history.includes(userValue)){
+    resultArea.textContent = "이미 입력한 숫자입니다";
+    return;
+  }
 
+  // console.log("유저가 고른 값",userValue)
+  chances--; //chance가 -1씩 감소한다 
+  chanceArea.textContent=`남은찬스:${chances}번`;
+  console.log("chance",chances);
 
+  if(userValue > randomNumber){
+    resultArea.textContent = "다운";
+    // console.log("down")
+  } else if(userValue < randomNumber){
+    resultArea.textContent = "업";
+    // console.log("up")
+  } else {
+    resultArea.textContent = "정답";
+    // console.log("정답")
+    gameOver = true;
+  }
 
-  chances--;//1씩 깎임
-  chanceArea.textContent=`남은기회:${chances}번`;
-  // console.log("기회",chances);
-  
-
-  if(userValue < randomNumber){
-
-    resultArea.textContent = "UP"
-  } else if(userValue > randomNumber){
-    resultArea.textContent = "DOWN"
-  } else{
-    resultArea.textContent = "정답"}
-  
-  history.push(userValue);
+history.push(userValue);
 console.log(history)
 
-if(chances < 1){
-  gameOver = true;
+  if(chances < 1 ){
+    gameOver = true;
+  }
+
+  if (gameOver == true){
+    buttonGo.disabled = true;
+  }
 }
 
-if ( gameOver == true){
-  buttonGo.disabled = true;
-}
-}
+
 
 function reset(){
-  userNumber.value = "";
-  randomGame()
+  //1.user input창이 깨끗하게 정리되고 
+  //2.새로운 번호가 생성되어야 한다 . 
+  userNumber.value = "";//1.empty
+  randomGame ();//2.
+
 }
-
-
-
-
 
 
 
